@@ -3,11 +3,18 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const keys = require('../../config/keys');
 const router = express.Router();
-
+const passport = require('passport');
 const User = require('../../models/User');
 
+router.get('/current', passport.authenticate('jwt', { session: false }), (req, res) => {
+    res.json({
+        id: req.user.id,
+        username: req.user.username,
+        email: req.user.email
+    });
+})
 router.post('/register', (req, res) => {
-    // Check to make sure nobody has already registered with a duplicate email
+    
     User.findOne({ email: req.body.email })
         .then(user => {
             if (user) {
@@ -57,7 +64,6 @@ router.post('/login', (req, res) => {
                         jwt.sign(
                             payload,
                             keys.secretOrKey,
-                            // Tell the key to expire in one hour
                             { expiresIn: 3600 },
                             (err, token) => {
                                 res.json({

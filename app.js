@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const app = express();
 const db = require('./config/keys').mongoURI
 const users = require("./routes/api/users");
-const tweets = require("./routes/api/tweets");
+const eventbrite = require("./routes/api/eventbrite");
 const bodyParser = require('body-parser');
 const passport = require('passport')
 
@@ -23,4 +23,4 @@ app.get("/", (req, res) => {
     console.log(res)
     res.send("Hleo World")});
 app.use("/api/users", users);
-app.use("/api/tweets", tweets);
+app.use("/api/eventbrite", eventbrite);

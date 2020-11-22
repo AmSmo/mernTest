@@ -7,6 +7,9 @@ const passport = require('passport');
 const User = require('../../models/User');
 const validateRegisterInput = require('../../validation/register');
 const validateLoginInput = require('../../validation/login');
+const eventbrite = require("eventbrite").default
+const apiFunctions = require("../../config/eventbrite_parser")
+const sdk = eventbrite({ token: keys.eventbriteAuth });
 
 
 router.get('/current', passport.authenticate('jwt', { session: false }), (req, res) => {
@@ -17,41 +20,58 @@ router.get('/current', passport.authenticate('jwt', { session: false }), (req, r
     });
 })
 router.post('/register', (req, res) => {
+
     const { errors, isValid } = validateRegisterInput(req.body);
     if (!isValid) {
         return res.status(400).json(errors);
     }
-    User.findOne({ email: req.body.email })
+    
+    User.findOne({ ticketId: req.body.ticketId })
         .then(user => {
-            if (user) {
-                errors.email = 'Email already exists'
-                return res.status(400).json(errors)
-            } else {
-                const newUser = new User({
-                    username: req.body.username,
-                    email: req.body.email,
-                    password: req.body.password
-                })
-
-                bcrypt.genSalt(10, (err, salt) => {
-                    bcrypt.hash(newUser.password, salt, (err, hash) => {
-                        if (err) throw err;
-                        newUser.password = hash;
-                        newUser.save()
-                            .then(user => {
-                                const payload = { id: user.id, handle: user.handle };
-                                jwt.sign(payload, keys.secretOrKey, { expiresIn: 9000 }, (err, token) => {
-                                    res.json({
-                                        success: true,
-                                        token: "Bearer " + token})
+            
+            // if (user) {
+            //     errors.ticketId = 'Ticket has already been used'
+            //     return res.status(400).json(errors)
+            // } else {
+                sdk.request('/events/130129525915/attendees/')
+                    .then(resp => {
+                        let organizedResponse = apiFunctions.getUsers(resp)
+                        if (organizedResponse[req.body.ticketId]) {
+                            const newUser = new User({
+                                ticketId: req.body.ticketId,
+                            })
+                            newUser.save()
+                                .then(user => {
+                                    let infoBack = organizedResponse[req.body.ticketId]
+                                    infoBack.ticketId = req.body.ticketId
+                                    const payload = { id: user.id, ticketId: user.ticketId };
+                                    jwt.sign(payload, keys.secretOrKey, { expiresIn: 9000 }, (err, token) => {
+                                        res.json({
+                                            success: true,
+                                            token: "Bearer " + token,
+                                            user: infoBack
+                                        })
                                     })
                                 })
-                            .catch(err => console.log(err));
-                    })
-                })
-            }
+                                .catch(err => res.json({error: (err)}));
+                        }
+                        else {
+                            res.json({ error: "No ticket found" })
+                        }
+                    }
+                    )
+                    .catch(e => res.json(e))
+            // }
         })
+                
+                
+                
+                
+                
+                
+                
 })
+
 router.post('/login', (req, res) => {
     const { errors, isValid } = validateLoginInput(req.body);
 

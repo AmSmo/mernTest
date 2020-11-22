@@ -2,17 +2,21 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const UserSchema = new Schema({
-    username: {
+    ticketId: {
         type: String,
         required: true
+    },
+    username: {
+        type: String,
     },
     email: {
         type: String,
-        required: true
     },
-    password: {
+    full_name: {
         type: String,
-        required: true
+    },
+    choices: {
+        type: Array
     }
 }, {
     timestamps: true

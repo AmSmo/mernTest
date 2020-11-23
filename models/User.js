@@ -12,7 +12,7 @@ const UserSchema = new Schema({
     email: {
         type: String,
     },
-    full_name: {
+    fullName: {
         type: String,
     },
     choices: {

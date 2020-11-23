@@ -29,47 +29,62 @@ router.post('/register', (req, res) => {
     User.findOne({ ticketId: req.body.ticketId })
         .then(user => {
             
-            // if (user) {
-            //     errors.ticketId = 'Ticket has already been used'
-            //     return res.status(400).json(errors)
-            // } else {
-                sdk.request('/events/130129525915/attendees/')
-                    .then(resp => {
-                        let organizedResponse = apiFunctions.getUsers(resp)
-                        if (organizedResponse[req.body.ticketId]) {
-                            const newUser = new User({
-                                ticketId: req.body.ticketId,
-                            })
-                            newUser.save()
-                                .then(user => {
-                                    let infoBack = organizedResponse[req.body.ticketId]
-                                    infoBack.ticketId = req.body.ticketId
-                                    const payload = { id: user.id, ticketId: user.ticketId };
-                                    jwt.sign(payload, keys.secretOrKey, { expiresIn: 9000 }, (err, token) => {
-                                        res.json({
-                                            success: true,
-                                            token: "Bearer " + token,
-                                            user: infoBack
-                                        })
+            if (user) {
+                
+                /* FOR TESTING!!!!! */
+                console.log(user)
+                const payload = { id: user.id, ticketId: user.ticketId };
+                jwt.sign(payload, keys.secretOrKey, { expiresIn: 9000 }, (err, token) => {
+                    res.json({
+                        success: true,
+                        token: "Bearer " + token,
+                        user: user
+                    })
+                })
+
+                
+                
+                /* BYPASSING FOR TESTING PURPOSES */
+                // errors.ticketId = 'Ticket has already been used'
+                // return res.status(400).json(errors)
+            } else {
+            sdk.request('/events/130129525915/attendees/')
+                .then(resp => {
+                    let organizedResponse = apiFunctions.getUsers(resp)
+                    if (organizedResponse[req.body.ticketId]) {
+                        const newUser = new User({
+                            ticketId: req.body.ticketId,
+                        })
+                        newUser.save()
+                            .then(user => {
+                                let infoBack = organizedResponse[req.body.ticketId]
+                                infoBack.ticketId = req.body.ticketId
+                                const payload = { id: user.id, ticketId: user.ticketId };
+                                jwt.sign(payload, keys.secretOrKey, { expiresIn: 9000 }, (err, token) => {
+                                    res.json({
+                                        success: true,
+                                        token: "Bearer " + token,
+                                        user: infoBack
                                     })
                                 })
-                                .catch(err => res.json({error: (err)}));
-                        }
-                        else {
-                            res.json({ error: "No ticket found" })
-                        }
+                            })
+                            .catch(err => res.json({ error: (err) }));
                     }
-                    )
-                    .catch(e => res.json(e))
-            // }
+                    else {
+                        res.json({ error: "No ticket found" })
+                    }
+                }
+                )
+                .catch(e => res.json(e))
+            }
         })
-                
-                
-                
-                
-                
-                
-                
+
+
+
+
+
+
+
 })
 
 router.post('/login', (req, res) => {
@@ -78,37 +93,32 @@ router.post('/login', (req, res) => {
     if (!isValid) {
         return res.status(400).json(errors);
     }
+    const { ticketId, username, full_name, email } = req.body
 
-    const email = req.body.email;
-    const password = req.body.password;
-
-    User.findOne({ email })
+    User.findOne({ ticketId })
         .then(user => {
+            
             if (!user) {
-                errors.email = 'User not found';
+                errors.email = 'Ticket';
                 return res.status(404).json(errors);
             }
 
-            bcrypt.compare(password, user.password)
-                .then(isMatch => {
-                    if (isMatch) {
-                        const payload = { id: user.id, username: user.username };
-                        jwt.sign(
-                            payload,
-                            keys.secretOrKey,
-                            { expiresIn: 9000 },
-                            (err, token) => {
-                                res.json({
-                                    success: true,
-                                    token: 'Bearer ' + token
-                                });
-                            });
-                    } else {
-                        errors.password = 'Incorrect password'
-                        return res.status(400).json(errors);
-                    }
-                })
-        })
+            user.updateOne({username, fullName: full_name, email})
+            .then(user=> {
+            const payload = { id: user.id, username: user.username };
+            jwt.sign(
+                payload,
+                keys.secretOrKey,
+                { expiresIn: 9000 },
+                (err, token) => {
+                    res.json({
+                        success: true,
+                        token: 'Bearer ' + token,
+                        user: {username, full_name}
+                    });
+                });})
+        
+}
+)
 })
-
 module.exports = router;

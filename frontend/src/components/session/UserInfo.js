@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 
 function UserInfo(props){
     let user = props.info
-    let randomName = props.info.name + " "+ props.info.ticketId.slice(-4)
+    let randomName = (props.info.name || props.info.fullName) + " "+ props.info.ticketId.slice(-4)
     let [username, setUsername] = useState(randomName)
 
     const handleChange = (e) =>{
@@ -11,11 +11,16 @@ function UserInfo(props){
     
     const handleSubmit = (e) =>{
         e.preventDefault()
-        console.log(e.target)
+        let userObj = {
+            ticketId: user.ticketId,
+            username: username,
+            fullName: (user.name ||user.fullName),
+            email: user.email
+        }
+        props.login(userObj)
     }
         return (
             <form onSubmit={handleSubmit}>
-                <input type="hidden" value={user.ticketId} />
                 <input type="text" value= {username} onChange={handleChange}/>
                 <input type="submit" value="Join the Fun!" />
             </form>

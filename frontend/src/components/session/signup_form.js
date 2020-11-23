@@ -8,8 +8,8 @@ function SignupForm(props){
     const [errors, setErrors] = useState({})
     const [ticketFound, setTicketFound] = useState(false)
     const [tempUserInfo, setTempUserInfo] = useState({})
-    const [signedIn, setSignedIn] = useState(false)
-if ( signedIn === true) {
+    
+if ( props.signedIn === true) {
     props.history.push('/chat')
 }
 
@@ -38,20 +38,20 @@ if ( signedIn === true) {
             )
     }
 
-    const login = userObj => {
-        APIUtil.login(userObj).then(e=>{
-            if (e.data.errors){
-                setErrors({errors: e.data.errors})
-            }else{
-                let {user, token} = e.data
+    // const login = userObj => {
+    //     APIUtil.login(userObj).then(e=>{
+    //         if (e.data.errors){
+    //             setErrors({errors: e.data.errors})
+    //         }else{
+    //             let {user, token} = e.data
                 
-                localStorage.setItem("token", token)
-                // APIUtil.setAuthToken(token);
-                // const decoded = jwt_decode(token);
-                // dispatch(receiveCurrentUser(decoded))
-            }
-        })
-    }
+    //             localStorage.setItem("jwtToken", token)
+    //             // APIUtil.setAuthToken(token);
+    //             // const decoded = jwt_decode(token);
+    //             // dispatch(receiveCurrentUser(decoded))
+    //         }
+    //     })
+    // }
 
     const renderErrors = () => {
         return (
@@ -73,7 +73,7 @@ if ( signedIn === true) {
         return (
             <div className="signup-form-container">
                         {ticketFound ?
-                            <UserInfo info={tempUserInfo} login={login} /> 
+                            <UserInfo info={tempUserInfo} login={props.login} /> 
                             :
                 <form onSubmit={handleSubmit}>
                     <div className="signup-form">

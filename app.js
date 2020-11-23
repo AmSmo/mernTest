@@ -7,6 +7,18 @@ const eventbrite = require("./routes/api/eventbrite");
 const bodyParser = require('body-parser');
 const passport = require('passport')
 
+const server = require('http').createServer(app);
+const options = {
+    cors: {
+        origin: '*',
+    } };
+const io = require('socket.io')(server, options); 
+
+io.on('connection', socket => { socket.emit("hello", "world"); });
+
+server.listen(3001);
+
+
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(passport.initialize());

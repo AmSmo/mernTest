@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom'
+import { withRouter } from 'react-router-dom'
 
 
 class NavBar extends React.Component {
@@ -13,7 +13,7 @@ class NavBar extends React.Component {
         e.preventDefault();
         this.props.logout();
     }
-
+    
     // Selectively render links dependent on whether the user is logged in
     getLinks() {
         if (this.props.loggedIn) {
@@ -23,12 +23,7 @@ class NavBar extends React.Component {
                 </div>
             );
         } else {
-            return (
-                <div>
-                    <Link to={'/signup'}>Signup</Link>
-                    <Link to={'/login'}>Login</Link>
-                </div>
-            );
+            return null
         }
     }
 
@@ -42,4 +37,4 @@ class NavBar extends React.Component {
     }
 }
 
-export default NavBar;
+export default withRouter(NavBar);

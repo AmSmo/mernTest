@@ -12,7 +12,7 @@ const apiFunctions = require("../../config/eventbrite_parser")
 const sdk = eventbrite({ token: keys.eventbriteAuth });
 
 
-router.get('/current', passport.authenticate('jwt', { session: false }), (req, res) => {
+router.post('/current', passport.authenticate('jwt', { session: false }), (req, res) => {
     res.json({
         id: req.user.id,
         username: req.user.username,
@@ -32,7 +32,7 @@ router.post('/register', (req, res) => {
             if (user) {
                 
                 /* FOR TESTING!!!!! */
-                console.log(user)
+                
                 const payload = { id: user.id, ticketId: user.ticketId };
                 jwt.sign(payload, keys.secretOrKey, { expiresIn: 9000 }, (err, token) => {
                     res.json({
@@ -59,7 +59,7 @@ router.post('/register', (req, res) => {
                             .then(user => {
                                 let infoBack = organizedResponse[req.body.ticketId]
                                 infoBack.ticketId = req.body.ticketId
-                                const payload = { id: user.id, ticketId: user.ticketId };
+                                const payload = { id: user.id, ticketId: user.ticketId};
                                 jwt.sign(payload, keys.secretOrKey, { expiresIn: 9000 }, (err, token) => {
                                     res.json({
                                         success: true,
@@ -95,16 +95,9 @@ router.post('/login', (req, res) => {
     }
     const { ticketId, username, full_name, email } = req.body
 
-    User.findOne({ ticketId })
-        .then(user => {
-            
-            if (!user) {
-                errors.email = 'Ticket';
-                return res.status(404).json(errors);
-            }
-
-            user.updateOne({username, fullName: full_name, email})
+    User.findOneAndUpdate({ ticketId }, { username, fullName: full_name, email } )
             .then(user=> {
+            console.log("item", user)    
             const payload = { id: user.id, username: user.username };
             jwt.sign(
                 payload,
@@ -120,5 +113,5 @@ router.post('/login', (req, res) => {
         
 }
 )
-})
+
 module.exports = router;

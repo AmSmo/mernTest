@@ -26,7 +26,7 @@ if ( props.signedIn === true) {
         APIUtil.signup(ticketId).then((e) => {
             if (e.data.error) {
                 setErrors({errors: e.data.error})
-                console.log(e.data.error)
+
             } else {
                 setErrors({})
                 setTempUserInfo(e.data.user)

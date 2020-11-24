@@ -6,15 +6,16 @@ import NavBarContainer from './nav/navbar_container';
 import MainPage from './main/main_page';
 import LoginFormContainer from './session/login_form_container';
 import SignupFormContainer from './session/signup_form_container';
-import Chat from '../Chat/Chat'
+import ChatsContainer from '../Chat/ChatsContainer'
+import Chat123 from '../Chat/Chat123'
+
 const App = () => (
    <div>
     <NavBarContainer />
     <Switch>
-        <Route path="/chat" component={Chat} />
-        <AuthRoute exact path="/" component={MainPage} />
-        <AuthRoute exact path="/login" component={LoginFormContainer} />
-        <AuthRoute exact path="/signup" component={SignupFormContainer} />
+        <Route path="/chat1" render={routerprops => <ChatsContainer {...routerprops} />} />
+        <Route path="/chat" render={routerprops => <Chat123 {...routerprops} />} />
+        <AuthRoute exact path="/" component={SignupFormContainer} />
     </Switch>
   </div>
 );

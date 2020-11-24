@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 export const setAuthToken = token => {
+    console.log(token)
     if (token) {
         axios.defaults.headers.common['Authorization'] = token;
     } else {
@@ -15,3 +16,7 @@ export const signup = (userData) => {
 export const login = (userData) => {
     return axios.post('/api/users/login', userData);
 };
+
+export const preAuth = () =>{
+    return axios.post('/api/users/current')
+}

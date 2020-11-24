@@ -8,7 +8,7 @@ function Chat(props){
     }
     
     const {roomId} = props
-    const { messages, sendMessage, stageTime, changeStageTime } = useChat(roomId)
+    const { messages, sendMessage, stageTime, changeStageTime } = useChat(roomId, props.username)
     const [newMessage, setNewMessage] = useState("")
     const [time, setTime] = useState(0)
     const [newTime, setNewTime]= useState("")
@@ -31,18 +31,18 @@ function Chat(props){
             
         return <li key={idx} className={ myMessage(message) ? "sent" : "received"}>{message.body}</li>
 } )   }
-    useEffect(() => {
-        let timer = setInterval(() => {
-            setTime(time => (time + 1));
+    // useEffect(() => {
+    //     let timer = setInterval(() => {
+    //         setTime(time => (time + 1));
             
-        }, 1000);
+    //     }, 1000);
 
-    return () => clearInterval(timer);
-    },[time])
+    // return () => clearInterval(timer);
+    // },[time])
 
-    useEffect(()=>{
-        return setTime(parseInt(stageTime))
-    },[stageTime])
+    // useEffect(()=>{
+    //     return setTime(parseInt(stageTime))
+    // },[stageTime])
     return(
         <div>
             <h2>Room {roomId} time {time}</h2>

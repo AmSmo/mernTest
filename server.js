@@ -7,6 +7,7 @@ const options = {
     };
 const io = require('socket.io')(server, options); 
 const NEW_CHAT_MESSAGE_EVENT = "newChatMessage";
+const NEW_HELP_MESSAGE_EVENT = "newHelpMessage";
     server.listen(port);
 
 io.on("connection", (socket) => {
@@ -15,7 +16,11 @@ io.on("connection", (socket) => {
 
     // Listen for new messages
     socket.on(NEW_CHAT_MESSAGE_EVENT, (data) => {
+        
         io.in(roomId).emit(NEW_CHAT_MESSAGE_EVENT, data);
+    });
+    socket.on(NEW_HELP_MESSAGE_EVENT, (data) => {
+        io.in("help").emit(NEW_HELP_MESSAGE_EVENT, data);
     });
 
     socket.on("changeTime", (data)=>{

@@ -97,7 +97,7 @@ router.post('/login', (req, res) => {
 
     User.findOneAndUpdate({ ticketId }, { username, fullName: full_name, email } )
             .then(user=> {
-            console.log("item", user)    
+               
             const payload = { id: user.id, username: user.username };
             jwt.sign(
                 payload,

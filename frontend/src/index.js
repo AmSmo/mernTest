@@ -14,7 +14,7 @@ if (localStorage.jwtToken) {
   setAuthToken(localStorage.jwtToken);
   const decodedUser = jwt_decode(localStorage.jwtToken);
   const preloadedState = { api: { isAuthenticated: true } };
-  console.log("Decoded", decodedUser)
+  
   store = configureStore(preloadedState);
   const currentTime = Date.now() / 1000;
   preAuth().then(data => localStorage.setItem("username", data.data.username)).catch(err=> console.log(err))

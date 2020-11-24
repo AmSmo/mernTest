@@ -28,7 +28,7 @@ function Chat(props){
 
     const displayMessages = () => {
         return messages.map((message, idx) => {
-            console.log("message", props)
+            
         return <li key={idx} className={ myMessage(message) ? "sent" : "received"}>{message.body}</li>
 } )   }
     useEffect(() => {

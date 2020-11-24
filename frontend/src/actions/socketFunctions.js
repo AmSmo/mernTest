@@ -2,7 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import socketIOClient from "socket.io-client";
 
 const NEW_CHAT_MESSAGE_EVENT = "newChatMessage"; // Name of the event
-const SOCKET_SERVER_URL = "http://localhost:3001";
+// const SOCKET_SERVER_URL = "http://localhost:3001";
+const SOCKET_SERVER_URL = "ws://warm-plains-05189.herokuapp.com:19605/socket.io/?EIO=4&transport=websocket";
 
 const useChat = (roomId) => {
     const [messages, setMessages] = useState([]); // Sent and received messages

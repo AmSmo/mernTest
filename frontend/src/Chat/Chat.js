@@ -6,6 +6,7 @@ function Chat(props){
     if (!props.loggedIn){
         props.history.push("/")
     }
+    
     const {roomId} = props
     const { messages, sendMessage, stageTime, changeStageTime } = useChat(roomId)
     const [newMessage, setNewMessage] = useState("")

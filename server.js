@@ -1,13 +1,18 @@
 module.exports = (function(app){
-    const server = require('https').createServer(app);
-const options = {
+    let server
+    if (app.protocol === "https"){
+         server = require('https').createServer(app);
+    }else{
+         server = require('http').createServer(app);}
+
+    const options = {
         cors: {
             origin: '*',
         }
     };
 const io = require('socket.io')(server, options); 
 const NEW_CHAT_MESSAGE_EVENT = "newChatMessage";
-    server.listen(8000);
+    server.listen(8080);
 
 io.on("connection", (socket) => {
     const { roomId } = socket.handshake.query;

@@ -24,13 +24,13 @@ app.use(bodyParser.json());
 app.use(passport.initialize());
 require('./config/passport')(passport);
 mongoose
-    .connect(db, { useNewUrlParser: true, useUnifiedTopology: true })
+    .connect(db, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false  })
     .then(() => console.log("Connected to MongoDB successfully"))
     .catch(err => console.log(err));
 
 const port = process.env.PORT || 5000;
 
-let withPort = app.listen(port);
-server(withPort)
+server(app)
+app.listen(port);
 app.use("/api/users", users);
 app.use("/api/eventbrite", eventbrite);

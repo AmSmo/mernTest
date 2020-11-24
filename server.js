@@ -1,17 +1,13 @@
-module.exports = (function(){
-    const port = process.env.PORT || 3000;
-    const express = require('express')
-    const server = express()
-        .use((req, res) => res.sendFile(INDEX, { root: __dirname }))
-        .listen(port, () => console.log(`Socket on ${port}`));
-    const options = {
+module.exports = (function(app, port){
+    const server = require('http').createServer(app);
+const options = {
         cors: {
             origin: '*',
         }
     };
-const io = require('socket.io')(server); 
+const io = require('socket.io')(server, options); 
 const NEW_CHAT_MESSAGE_EVENT = "newChatMessage";
-    // server.listen();
+    server.listen(port);
 
 io.on("connection", (socket) => {
     const { roomId } = socket.handshake.query;

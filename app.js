@@ -31,8 +31,8 @@ mongoose
 
 
 const port = process.env.PORT || 5000;
-server()
 app.listen(port);
+server(app,port)
 
 app.use("/api/users", users);
 app.use("/api/eventbrite", eventbrite);

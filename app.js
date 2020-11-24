@@ -16,7 +16,7 @@ if (process.env.NODE_ENV === 'production') {
  
 }
 /* CHAT! */
-server(app)
+
 /* REST OF THE API */
 
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -31,5 +31,6 @@ mongoose
 const port = process.env.PORT || 5000;
 
 app.listen(port, () => console.log(`Server is running on port ${port}`));
+server(app)
 app.use("/api/users", users);
 app.use("/api/eventbrite", eventbrite);

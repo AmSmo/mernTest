@@ -12,7 +12,7 @@ module.exports = (function(app){
     };
 const io = require('socket.io')(server, options); 
 const NEW_CHAT_MESSAGE_EVENT = "newChatMessage";
-    
+    server.listen();
 
 io.on("connection", (socket) => {
     const { roomId } = socket.handshake.query;

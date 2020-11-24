@@ -3,7 +3,7 @@ import socketIOClient from "socket.io-client";
 
 const NEW_CHAT_MESSAGE_EVENT = "newChatMessage"; // Name of the event
 // const SOCKET_SERVER_URL = "http://localhost:3001";
-const SOCKET_SERVER_URL = window.location.origin.replace(/^http/, 'ws')
+const SOCKET_SERVER_URL = "https://warm-plains-05189.herokuapp.com:3000"
 
 const useChat = (roomId) => {
     const [messages, setMessages] = useState([]); // Sent and received messages

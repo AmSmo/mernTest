@@ -31,7 +31,7 @@ mongoose
 
 
 const port = process.env.PORT || 5000;
-app.listen(port);
+
 server(app,port)
 
 app.use("/api/users", users);

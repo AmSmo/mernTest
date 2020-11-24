@@ -1,7 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import {connect} from 'react-redux'
 import {useHelp} from'../actions/helpFunctions'
+import {HelpArea, SendMessageButton} from '../styles/styles'
 import Chat from './Chat'
+
 function UserHelp(props){
     
     
@@ -14,36 +16,25 @@ function UserHelp(props){
         setMyHelp(true)
     }
 
-
-    const myMessage = (message) =>{
-        return message.owner === props.username
-    }
-
-    const displayMessages = () => {
-        return messages.map((message, idx) => {
-            
-        return <li key={idx} className={ myMessage(message) ? "sent" : "received"}>{message.body}</li>
-} )   }
-
     return(
          myHelp ? 
-            <>
-                <Chat roomId = {props.username} />
+            <HelpArea>
+                <Chat roomId = {props.username} help />
+                <br></br>
                 <button onClick={()=>setMyHelp(false)}>Solved</button>
-            </>
+            </HelpArea>
                 :
-        <div>
-            <h2>USER HELP</h2>
-            
+        <HelpArea>
+            <p>Please Describe You Problem</p>
             <textarea
                 value={newMessage}
                 onChange={(e)=> setNewMessage(e.target.value)}
                 placeholder="Your Message..."
-            />
-            <button onClick={handleSendMessage}>Send Message</button>
+            /><br></br>
+            <SendMessageButton onClick={handleSendMessage}>Send Message</SendMessageButton>
             
                 
-            </div>
+        </HelpArea>
         
         
     )   

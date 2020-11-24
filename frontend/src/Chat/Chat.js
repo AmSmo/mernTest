@@ -1,7 +1,8 @@
-import React, {useEffect, useState} from 'react'
+import React, {useEffect, useState, useRef} from 'react'
 import {useChat} from '../actions/socketFunctions'
 import {connect} from 'react-redux'
 import {withRouter} from 'react-router-dom'
+import {SendMessageButton, MessageLine, MessageContainer} from '../styles/styles'
 function Chat(props){
     if (!props.loggedIn){
         props.history.push("/")
@@ -18,6 +19,13 @@ function Chat(props){
 
     }
 
+    const messagesEndRef = useRef(null)
+
+    const scrollToBottom = () => {
+        messagesEndRef.current.scrollIntoView({ behavior: "smooth" })
+    }
+
+    useEffect(scrollToBottom, [messages]);
     const handleTimeChange = () =>{
        changeStageTime(parseInt(newTime))
     }
@@ -29,7 +37,7 @@ function Chat(props){
     const displayMessages = () => {
         return messages.map((message, idx) => {
             
-        return <li key={idx} className={ myMessage(message) ? "sent" : "received"}>{message.body}</li>
+        return <MessageLine key={idx} className={ myMessage(message) ? "sent" : "received"}>{message.body}</MessageLine>
 } )   }
     // useEffect(() => {
     //     let timer = setInterval(() => {
@@ -45,18 +53,22 @@ function Chat(props){
     // },[stageTime])
     return(
         <div>
+            {props.help ? 
+            null:
             <h2>Room {roomId} time {time}</h2>
-            
-            <div>
+            }
+            <MessageContainer>
+                mooo
                 {displayMessages()}
-            </div>
+                <div ref={messagesEndRef} />
+            </MessageContainer>
             
             <textarea
                 value={newMessage}
                 onChange={(e)=> setNewMessage(e.target.value)}
                 placeholder="Your Message..."
-            />
-            <button onClick={handleSendMessage}>Send Message</button>
+            /><br></br>
+            <SendMessageButton onClick={handleSendMessage}>Send Message</SendMessageButton>
 
             {props.control ? 
             <>

@@ -1,5 +1,5 @@
 module.exports = (function(app){
-    const server = require('http').createServer(app);
+    const server = require('https').createServer(app);
 const options = {
         cors: {
             origin: '*',
